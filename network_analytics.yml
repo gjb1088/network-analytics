@@ -1,18 +1,22 @@
+---
 - name: Network Analytics and Reporting
-  hosts: localhost
-  tasks:
-    - name: Network Analytics and Reporting
   hosts: localhost
   tasks:
     - name: Measure latency
       shell: >
         ping -c 4 google.com |
-        awk -F'= ' '/rtt/ {print $2}' |
+        grep 'rtt' |
+        awk -F'= ' '{print $2}' |
         awk -F'/' '{print $2}' |
         awk '{printf "%.2f", $1}'
       register: latency
-      ignore_errors: yes
       changed_when: false
+      args:
+        executable: /bin/bash
+
+    - name: Debug latency output
+      debug:
+        var: latency
 
     - name: Measure download speed
       shell: >
@@ -37,7 +41,6 @@
           📥 Download Speed │ {{ download_speed.stdout | default('N/A') }} Mbps
           ⏱️ Uptime        │ {{ uptime.stdout | float | default(0) / 3600 | round(2) }} hours
           ───────────────────────────────
-
     - name: Verify report file exists
       stat:
         path: /tmp/network_report.txt
