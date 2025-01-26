@@ -38,8 +38,8 @@
       community.general.mail:
         host: smtp.mailgun.org
         port: 587
-        username: "sandboxea847655ab024c23ae155cf9b108ac68.mailgun.org"
-        password: "33d5be62f2992a5295c116136e40170c-9c3f0c68-2af1ec5d"
+        username: "postmaster@sandboxcb4b86c323424254b5c38ff02600f2d4.mailgun.org"
+        password: "3b65d494423d454129364b8261e72483-9c3f0c68-fe8bc2c4"
         to:
           - "gjb1088@gmail.com"
         subject: "Daily Network Analytics Report"
