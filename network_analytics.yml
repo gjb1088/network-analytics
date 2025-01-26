@@ -47,5 +47,5 @@
           Please find the attached network analytics report.
         attach:
           - /tmp/network_report.txt
-        secure: startls
+        secure: starttls
         timeout: 30
