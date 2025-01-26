@@ -36,10 +36,10 @@
 
     - name: Send email with the report
       community.general.mail:
-        host: smtp.gmail.com
+        host: smtp.mailgun.org
         port: 587
-        username: "equipmentold@gmail.com"
-        password: "HelloThere1088!"
+        username: "sandboxea847655ab024c23ae155cf9b108ac68.mailgun.org"
+        password: "33d5be62f2992a5295c116136e40170c-9c3f0c68-2af1ec5d"
         to:
           - "gjb1088@gmail.com"
         subject: "Daily Network Analytics Report"
