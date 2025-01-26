@@ -25,7 +25,7 @@
           Uptime: {{ uptime.stdout }}
 
     - name: Send email with the report
-  community.general.mail:
+      community.general.mail:
     host: smtp.gmail.com
     port: 587
     username: equipmentold@gmail.com
