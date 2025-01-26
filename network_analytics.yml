@@ -1,14 +1,18 @@
 - name: Network Analytics and Reporting
   hosts: localhost
   tasks:
+    - name: Network Analytics and Reporting
+  hosts: localhost
+  tasks:
     - name: Measure latency
       shell: >
-       ping -c 4 google.com | 
-        grep -oP 'round-trip min/avg/max/stddev = \K[^/]+' |  # Extract avg latency
-        awk -F'/' '{print $2}'
+        ping -c 4 google.com |
+        awk -F'= ' '/rtt/ {print $2}' |
+        awk -F'/' '{print $2}' |
+        awk '{printf "%.2f", $1}'
       register: latency
       ignore_errors: yes
-      changed_when: false  # Always show as "OK" even if ping fails
+      changed_when: false
 
     - name: Measure download speed
       shell: >
