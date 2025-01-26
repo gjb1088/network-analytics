@@ -48,4 +48,3 @@
         attach:
           - /tmp/network_report.txt
         secure: starttls
-        debug: true
