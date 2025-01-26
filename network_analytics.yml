@@ -11,7 +11,7 @@
       register: download_speed
 
     - name: Measure uptime
-      shell: "uptime -p"
+      shell: "awk '{print $1}' /proc/uptime"
       register: uptime
 
     - name: Generate report
