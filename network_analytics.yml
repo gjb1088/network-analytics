@@ -19,10 +19,20 @@
         dest: /tmp/network_report.txt
         content: |
           Network Analytics Report:
-          =========================
+          ==========================
           Latency: {{ latency.stdout }} ms
           Download Speed: {{ download_speed.stdout }} Mbps
           Uptime: {{ uptime.stdout | float / 3600 | round(2) }} hours
+
+    - name: Verify the report file exists
+      stat:
+        path: /tmp/network_report.txt
+      register: report_file
+
+    - name: Ensure the report file exists before sending email
+      fail:
+        msg: "The report file does not exist at /tmp/network_report.txt"
+      when: not report_file.stat.exists
 
     - name: Send email with the report
       community.general.mail:
