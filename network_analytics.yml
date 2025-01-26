@@ -37,7 +37,7 @@
     - name: Send email with the report
       community.general.mail:
         host: smtp-mail.outlook.com
-        port: 465
+        port: 587
         username: "gjb1088@hotmail.com"
         password: "LionHeart1088"
         to:
@@ -48,3 +48,4 @@
         attach:
           - /tmp/network_report.txt
         secure: starttls
+        timeout: 30
