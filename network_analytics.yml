@@ -7,7 +7,7 @@
       register: latency
 
     - name: Measure download speed
-      shell: "curl -s https://raw.githubusercontent.com/sivel/speedtest-cli/master/speedtest.py | python - | grep 'Download' | awk '{print $2}'"
+      shell: "curl -s https://raw.githubusercontent.com/sivel/speedtest-cli/master/speedtest.py | python3 - | grep 'Download' | awk '{print $2}'"
       register: download_speed
 
     - name: Measure uptime
@@ -22,20 +22,20 @@
           =========================
           Latency: {{ latency.stdout }} ms
           Download Speed: {{ download_speed.stdout }} Mbps
-          Uptime: {{ uptime.stdout }}
+          Uptime: {{ uptime.stdout | float / 3600 | round(2) }} hours
 
- - name: Send email with the report
-   community.general.mail:
-     host: smtp-mail.outlook.com
-     port: 587
-     username: "gjb1088@hotmail.com"
-     password: "LionHeart1088!"
-     to:
-       - "gjb1088@gmail.com"
-     subject: "Daily Network Analytics Report"
-     body: |
-      Please find the attached network analytics report.
-     attach:
-      - /tmp/network_report.txt
-     secure: starttls
-     debug: true
+    - name: Send email with the report
+      community.general.mail:
+        host: smtp-mail.outlook.com
+        port: 587
+        username: "gjb1088@hotmail.com"
+        password: "LionHeart1088"
+        to:
+          - "gjb1088@gmail.com"
+        subject: "Daily Network Analytics Report"
+        body: |
+          Please find the attached network analytics report.
+        attach:
+          - /tmp/network_report.txt
+        secure: starttls
+        debug: true
