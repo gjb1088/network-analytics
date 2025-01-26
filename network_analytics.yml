@@ -47,7 +47,7 @@
         host: smtp.gmail.com  # Corrected hostname
         port: 587
         username: "equipmentold@gmail.com"
-        password: "HelloThere1088!"  # Use App Password if 2FA is enabled
+        password: "inpb nclm tcvo tudq"  # Use App Password if 2FA is enabled
         to:
           - "gjb1088@gmail.com"
         subject: "Daily Network Analytics Report"
