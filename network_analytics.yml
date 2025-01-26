@@ -1,0 +1,39 @@
+---
+- name: Network Analytics and Reporting
+  hosts: localhost
+  tasks:
+    - name: Measure latency
+      shell: "ping -c 4 google.com | grep avg | awk -F'/' '{print $5}'"
+      register: latency
+
+    - name: Measure download speed
+      shell: "curl -s https://raw.githubusercontent.com/sivel/speedtest-cli/master/speedtest.py | python - | grep 'Download' | awk '{print $2}'"
+      register: download_speed
+
+    - name: Measure uptime
+      shell: "uptime -p"
+      register: uptime
+
+    - name: Generate report
+      copy:
+        dest: /tmp/network_report.txt
+        content: |
+          Network Analytics Report:
+          =========================
+          Latency: {{ latency.stdout }} ms
+          Download Speed: {{ download_speed.stdout }} Mbps
+          Uptime: {{ uptime.stdout }}
+
+    - name: Send email with the report
+      mail:
+        host: smtp.gmail.com
+        port: 587
+        username: equipmentold@gmail.com
+        password: HelloThere1088!
+        to:
+          - gjb1088@gmail.com
+        subject: "Daily Network Analytics Report"
+        body: |
+          Please find the attached network analytics report.
+        attach:
+          - /tmp/network_report.txt
