@@ -3,11 +3,12 @@
   tasks:
     - name: Measure latency
       shell: >
-        ping -c 4 google.com | 
-        awk -F'/' '/avg/{print $5}' | 
-        awk '{print $1}'
+       ping -c 4 google.com | 
+        grep -oP 'round-trip min/avg/max/stddev = \K[^/]+' |  # Extract avg latency
+        awk -F'/' '{print $2}'
       register: latency
       ignore_errors: yes
+      changed_when: false  # Always show as "OK" even if ping fails
 
     - name: Measure download speed
       shell: >
