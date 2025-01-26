@@ -25,15 +25,15 @@
           Uptime: {{ uptime.stdout }}
 
     - name: Send email with the report
-      mail:
-        host: smtp.gmail.com
-        port: 587
-        username: equipmentold@gmail.com
-        password: HelloThere1088!
-        to:
-          - gjb1088@gmail.com
-        subject: "Daily Network Analytics Report"
-        body: |
-          Please find the attached network analytics report.
-        attach:
-          - /tmp/network_report.txt
+  community.general.mail:
+    host: smtp.gmail.com
+    port: 587
+    username: equipmentold@gmail.com
+    password: HelloThere1088!
+    to:
+      - gjb1088@gmail.com
+    subject: "Daily Network Analytics Report"
+    body: |
+      Please find the attached network analytics report.
+    attach:
+      - /tmp/network_report.txt
