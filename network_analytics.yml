@@ -1,4 +1,3 @@
----
 - name: Network Analytics and Reporting
   hosts: localhost
   tasks:
@@ -34,12 +33,21 @@
         msg: "The report file does not exist at /tmp/network_report.txt"
       when: not report_file.stat.exists
 
+    - name: Debug SMTP settings
+      debug:
+        msg: |
+          Host: smtp.gmail.com
+          Port: 587
+          Username: equipmentold@gmail.com
+          Password: HelloThere1088!
+          Secure: starttls
+
     - name: Send email with the report
       community.general.mail:
-        host: smtp.gmail.org
+        host: smtp.gmail.com  # Corrected hostname
         port: 587
         username: "equipmentold@gmail.com"
-        password: "HelloThere1088!"
+        password: "HelloThere1088!"  # Use App Password if 2FA is enabled
         to:
           - "gjb1088@gmail.com"
         subject: "Daily Network Analytics Report"
