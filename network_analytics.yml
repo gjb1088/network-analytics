@@ -49,4 +49,4 @@
           - /tmp/network_report.txt
         secure: startls
         timeout: 30
-      debug: true
+     debug: true
