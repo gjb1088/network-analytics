@@ -28,10 +28,10 @@
       community.general.mail:
         host: smtp.gmail.com
         port: 587
-        username: your_email@gmail.com
-        password: your_password
+        username: equipmentold@gmail.com
+        password: HelloThere1088!
         to:
-          - recipient_email@gmail.com
+          - gjb1088@gmail.com
         subject: "Daily Network Analytics Report"
         body: |
           Please find the attached network analytics report.
