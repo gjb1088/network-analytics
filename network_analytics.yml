@@ -24,7 +24,7 @@
           Download Speed: {{ download_speed.stdout }} Mbps
           Uptime: {{ uptime.stdout }}
 
-    - name: Send email with the report
+- name: Send email with the report
   community.general.mail:
     host: smtp-mail.outlook.com
     port: 587
@@ -38,4 +38,4 @@
     attach:
       - /tmp/network_report.txt
     secure: starttls
-        debug: true
+    debug: true
