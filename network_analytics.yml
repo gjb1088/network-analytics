@@ -25,17 +25,17 @@
           Uptime: {{ uptime.stdout }}
 
     - name: Send email with the report
-      community.general.mail:
-        host: smtp-mail.outlook.com
-        port: 587
-        username: gjb1088@hotmail.com
-        password: LionHeart1088
-        to:
-          - gjb1088@gmail.com
-        subject: "Daily Network Analytics Report"
-        body: |
-          Please find the attached network analytics report.
-        attach:
-          - /tmp/network_report.txt
-        secure: starttls
+  community.general.mail:
+    host: smtp-mail.outlook.com
+    port: 587
+    username: "youremail@outlook.com"
+    password: "your_app_password"
+    to:
+      - "recipient@example.com"
+    subject: "Daily Network Analytics Report"
+    body: |
+      Please find the attached network analytics report.
+    attach:
+      - /tmp/network_report.txt
+    secure: starttls
         debug: true
