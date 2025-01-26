@@ -37,7 +37,7 @@
     - name: Send email with the report
       community.general.mail:
         host: smtp-mail.outlook.com
-        port: 25
+        port: 465
         username: "gjb1088@hotmail.com"
         password: "LionHeart1088"
         to:
@@ -47,4 +47,4 @@
           Please find the attached network analytics report.
         attach:
           - /tmp/network_report.txt
-        secure: starttls
+        secure: SSL/TLS
