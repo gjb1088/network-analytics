@@ -26,10 +26,10 @@
 
     - name: Send email with the report
       community.general.mail:
-        host: smtp.gmail.com
-        port: 465
-        username: equipmentold@gmail.com
-        password: HelloThere1088!
+        host: smtp-mail.outlook.com
+        port: 587
+        username: gjb1088@hotmail.com
+        password: LionHeart1088
         to:
           - gjb1088@gmail.com
         subject: "Daily Network Analytics Report"
