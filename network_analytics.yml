@@ -2,12 +2,21 @@
   hosts: localhost
   tasks:
     - name: Measure latency
-      shell: "ping -c 4 google.com | grep avg | awk -F'/' '{print $5}'"
+      shell: >
+        ping -c 4 google.com | 
+        awk -F'/' '/avg/{print $5}' | 
+        awk '{print $1}'
       register: latency
+      ignore_errors: yes
 
     - name: Measure download speed
-      shell: "curl -s https://raw.githubusercontent.com/sivel/speedtest-cli/master/speedtest.py | python3 - | grep 'Download' | awk '{print $2}'"
+      shell: >
+        curl -s https://raw.githubusercontent.com/sivel/speedtest-cli/master/speedtest.py |
+        python3 - --secure |
+        grep 'Download' |
+        awk '{print $2}'
       register: download_speed
+      ignore_errors: yes
 
     - name: Measure uptime
       shell: "awk '{print $1}' /proc/uptime"
@@ -17,21 +26,23 @@
       copy:
         dest: /tmp/network_report.txt
         content: |
-          Network Analytics Report:
-          ==========================
-          Latency: {{ latency.stdout }} ms
-          Download Speed: {{ download_speed.stdout }} Mbps
-          Uptime: {{ uptime.stdout | float / 3600 | round(2) }} hours
+          📊 Network Performance Report
+          ───────────────────────────────
+          🔁 Latency       │ {{ latency.stdout | default('N/A') }} ms
+          📥 Download Speed │ {{ download_speed.stdout | default('N/A') }} Mbps
+          ⏱️ Uptime        │ {{ uptime.stdout | float | default(0) / 3600 | round(2) }} hours
+          ───────────────────────────────
 
-    - name: Verify the report file exists
+    - name: Verify report file exists
       stat:
         path: /tmp/network_report.txt
       register: report_file
 
-    - name: Ensure the report file exists before sending email
+    - name: Fail if report missing
       fail:
-        msg: "The report file does not exist at /tmp/network_report.txt"
+        msg: "Report file not found at /tmp/network_report.txt"
       when: not report_file.stat.exists
+
 
     - name: Debug SMTP settings
       debug:
@@ -39,7 +50,7 @@
           Host: smtp.gmail.com
           Port: 587
           Username: equipmentold@gmail.com
-          Password: HelloThere1088!
+          Password: "inpb nclm tcvo tudq"
           Secure: starttls
 
     - name: Send email with the report
@@ -52,7 +63,12 @@
           - "gjb1088@gmail.com"
         subject: "Daily Network Analytics Report"
         body: |
-          Please find the attached network analytics report.
+          Attached is the latest network performance report.
+          
+          📊 Key Metrics:
+          - Latency: {{ latency.stdout | default('N/A') }} ms
+          - Download Speed: {{ download_speed.stdout | default('N/A') }} Mbps
+          - Uptime: {{ uptime.stdout | float | default(0) / 3600 | round(2) }} hours
         attach:
           - /tmp/network_report.txt
         secure: starttls
