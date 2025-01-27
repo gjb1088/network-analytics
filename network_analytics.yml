@@ -11,7 +11,7 @@
       changed_when: false
 
     - name: Debug raw ping output
-      shell: /usr/bin/ping -c 4 google.com
+      shell: ping -c 4 google.com
       register: raw_ping
       changed_when: false
       ignore_errors: yes
