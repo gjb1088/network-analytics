@@ -1,30 +1,16 @@
 ---
 - name: Network Analytics and Reporting
   hosts: localhost
-  become: yes  # Use sudo for permissions (e.g., to install packages)
-
   tasks:
-    - name: Install required packages (iputils for ping)
-      ansible.builtin.package:
-        name: iputils
-        state: present
-      when: ansible_facts['pkg_mgr'] == 'dnf'  # For Fedora/CentOS/RHEL
-
     - name: Measure latency
       shell: >
-        /usr/bin/ping -c 4 google.com |  # Use absolute path
-        grep 'rtt' |
-        awk -F'= ' '{print $2}' |
+        /usr/bin/ping ping -c 4 google.com |
+        awk -F'= ' '/rtt/ {print $2}' |
         awk -F'/' '{print $2}' |
         awk '{printf "%.2f", $1}'
       register: latency
+      ignore_errors: yes
       changed_when: false
-      args:
-        executable: /bin/bash
-
-    - name: Debug latency output
-      debug:
-        var: latency.stdout
 
     - name: Measure download speed
       shell: >
