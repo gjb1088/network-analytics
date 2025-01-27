@@ -1,19 +1,20 @@
 ---
 - name: Network Analytics and Reporting
   hosts: localhost
-  become: yes  # Use sudo for permissions
-
   tasks:
-    - name: Install iputils (ping)
-      ansible.builtin.package:
-        name: iputils
-        state: present
-      when: ansible_facts['pkg_mgr'] == 'dnf'
+    - name: Install iputils (ping) if not already installed
+      shell: |
+        if ! command -v ping &> /dev/null; then
+          yum install -y iputils || echo "Failed to install iputils";
+        fi
+      register: install_ping
+      changed_when: false
 
     - name: Debug raw ping output
       shell: /usr/bin/ping -c 4 google.com
       register: raw_ping
       changed_when: false
+      ignore_errors: yes
 
     - name: Show raw ping output
       debug:
@@ -64,7 +65,7 @@
         host: smtp.gmail.com
         port: 587
         username: "equipmentold@gmail.com"
-        password: "your_app_password"  # Replace with App Password
+        password: "odng upwk lixm scqh"  # Replace with App Password
         to: "gjb1088@gmail.com"
         subject: "Daily Network Analytics Report"
         body: |
