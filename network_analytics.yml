@@ -3,7 +3,6 @@
   hosts: localhost
   tasks:
     - name: Install iputils (ping) if not already installed
-      become: yes
       shell: |
         if ! command -v ping &> /dev/null; then
           yum install -y iputils || echo "Failed to install iputils";
