@@ -11,6 +11,12 @@
       register: latency
       ignore_errors: yes
       changed_when: false
+      args:
+        executable: /bin/bash
+
+    - name: Debug latency output
+      debug:
+        var: latency.stdout
 
     - name: Measure download speed
       shell: >
