@@ -1,15 +1,32 @@
 ---
 - name: Network Analytics and Reporting
   hosts: localhost
+  become: yes  # Use sudo for permissions
+
   tasks:
+    - name: Install iputils (ping)
+      ansible.builtin.package:
+        name: iputils
+        state: present
+      when: ansible_facts['pkg_mgr'] == 'dnf'
+
+    - name: Debug raw ping output
+      shell: /usr/bin/ping -c 4 google.com
+      register: raw_ping
+      changed_when: false
+
+    - name: Show raw ping output
+      debug:
+        var: raw_ping.stdout
+
     - name: Measure latency
       shell: >
-        /usr/bin/ping ping -c 4 google.com |
-        awk -F'= ' '/rtt/ {print $2}' |
+        /usr/bin/ping -c 4 google.com |
+        (grep 'rtt' || echo 'N/A') |
+        awk -F'= ' '{print $2}' |
         awk -F'/' '{print $2}' |
         awk '{printf "%.2f", $1}'
       register: latency
-      ignore_errors: yes
       changed_when: false
       args:
         executable: /bin/bash
@@ -42,24 +59,13 @@
           ⏱️ Uptime        │ {{ uptime.stdout | float | default(0) / 3600 | round(2) }} hours
           ───────────────────────────────
 
-    - name: Verify report file exists
-      stat:
-        path: /tmp/network_report.txt
-      register: report_file
-
-    - name: Fail if report missing
-      fail:
-        msg: "Report file not found at /tmp/network_report.txt"
-      when: not report_file.stat.exists
-
     - name: Send email with report
       community.general.mail:
         host: smtp.gmail.com
         port: 587
         username: "equipmentold@gmail.com"
-        password: "inpb nclm tcvo tudq"  # Use App Password if 2FA is enabled
-        to:
-          - "gjb1088@gmail.com"
+        password: "your_app_password"  # Replace with App Password
+        to: "gjb1088@gmail.com"
         subject: "Daily Network Analytics Report"
         body: |
           Attached is the latest network performance report.
@@ -68,7 +74,6 @@
           - Latency: {{ latency.stdout | default('N/A') }} ms
           - Download Speed: {{ download_speed.stdout | default('N/A') }} Mbps
           - Uptime: {{ uptime.stdout | float | default(0) / 3600 | round(2) }} hours
-        attach:
-          - /tmp/network_report.txt
+        attach: /tmp/network_report.txt
         secure: starttls
         timeout: 30
