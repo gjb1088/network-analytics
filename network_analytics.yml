@@ -1,22 +1,30 @@
 ---
 - name: Network Analytics and Reporting
   hosts: localhost
+  become: yes  # Use sudo for permissions (e.g., to install packages)
+
   tasks:
-  - name: Measure latency
-  shell: >
-    /usr/bin/ping -c 4 google.com |  # Use full path to ping
-    grep 'rtt' |
-    awk -F'= ' '{print $2}' |
-    awk -F'/' '{print $2}' |
-    awk '{printf "%.2f", $1}'
-  register: latency
-  changed_when: false
+    - name: Install required packages (iputils for ping)
+      ansible.builtin.package:
+        name: iputils
+        state: present
+      when: ansible_facts['pkg_mgr'] == 'dnf'  # For Fedora/CentOS/RHEL
+
+    - name: Measure latency
+      shell: >
+        /usr/bin/ping -c 4 google.com |  # Use absolute path
+        grep 'rtt' |
+        awk -F'= ' '{print $2}' |
+        awk -F'/' '{print $2}' |
+        awk '{printf "%.2f", $1}'
+      register: latency
+      changed_when: false
       args:
         executable: /bin/bash
 
     - name: Debug latency output
       debug:
-        var: latency
+        var: latency.stdout
 
     - name: Measure download speed
       shell: >
@@ -41,6 +49,7 @@
           📥 Download Speed │ {{ download_speed.stdout | default('N/A') }} Mbps
           ⏱️ Uptime        │ {{ uptime.stdout | float | default(0) / 3600 | round(2) }} hours
           ───────────────────────────────
+
     - name: Verify report file exists
       stat:
         path: /tmp/network_report.txt
@@ -51,19 +60,9 @@
         msg: "Report file not found at /tmp/network_report.txt"
       when: not report_file.stat.exists
 
-
-    - name: Debug SMTP settings
-      debug:
-        msg: |
-          Host: smtp.gmail.com
-          Port: 587
-          Username: equipmentold@gmail.com
-          Password: "inpb nclm tcvo tudq"
-          Secure: starttls
-
-    - name: Send email with the report
+    - name: Send email with report
       community.general.mail:
-        host: smtp.gmail.com  # Corrected hostname
+        host: smtp.gmail.com
         port: 587
         username: "equipmentold@gmail.com"
         password: "inpb nclm tcvo tudq"  # Use App Password if 2FA is enabled
