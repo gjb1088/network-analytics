@@ -2,15 +2,15 @@
 - name: Network Analytics and Reporting
   hosts: localhost
   tasks:
-    - name: Measure latency
-      shell: >
-        ping -c 4 google.com |
-        grep 'rtt' |
-        awk -F'= ' '{print $2}' |
-        awk -F'/' '{print $2}' |
-        awk '{printf "%.2f", $1}'
-      register: latency
-      changed_when: false
+  - name: Measure latency
+  shell: >
+    /usr/bin/ping -c 4 google.com |  # Use full path to ping
+    grep 'rtt' |
+    awk -F'= ' '{print $2}' |
+    awk -F'/' '{print $2}' |
+    awk '{printf "%.2f", $1}'
+  register: latency
+  changed_when: false
       args:
         executable: /bin/bash
 
