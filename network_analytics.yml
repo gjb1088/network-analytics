@@ -2,14 +2,6 @@
 - name: Network Analytics and Reporting
   hosts: localhost
   tasks:
-    - name: Install iputils (ping) if not already installed
-      shell: |
-        if ! command -v ping &> /dev/null; then
-          yum install -y iputils || echo "Failed to install iputils";
-        fi
-      register: install_ping
-      changed_when: false
-
     - name: Debug raw ping output
       shell: ping -c 4 google.com
       register: raw_ping
