@@ -41,16 +41,16 @@
       shell: "awk '{print $1}' /proc/uptime"
       register: uptime
 
-    - name: Generate report
-      copy:
-        dest: /tmp/network_report.txt
-        content: |
-          📊 Network Performance Report
-          ───────────────────────────────
-          🔁 Latency       │ {{ latency.stdout | default('N/A') }} ms
-          📥 Download Speed │ {{ download_speed.stdout | default('N/A') }} Mbps
-          ⏱️ Uptime        │ {{ uptime.stdout | float | default(0) / 3600 | round(2) }} hours
-          ───────────────────────────────
+     - name: Generate graphs using Python
+      command: python3 /usr/local/bin/generate_graphs.py "{{ latency.stdout }}" "{{ download_speed.stdout }}"
+      args:
+        chdir: "/tmp"
+
+    - name: Generate PDF Report
+      command: python3 /usr/local/bin/generate_pdf_report.py "{{ latency.stdout }}" "{{ download_speed.stdout }}" "{{ uptime.stdout }}"
+      args:
+        chdir: "/tmp"
+
 
     - name: Send email with report
       community.general.mail:
@@ -67,6 +67,6 @@
           - Latency: {{ latency.stdout | default('N/A') }} ms
           - Download Speed: {{ download_speed.stdout | default('N/A') }} Mbps
           - Uptime: {{ uptime.stdout | float | default(0) / 3600 | round(2) }} hours
-        attach: /tmp/network_report.txt
+        attach: /tmp/network_report.pdf
         secure: starttls
         timeout: 30
