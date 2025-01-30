@@ -56,7 +56,7 @@
         host: smtp.gmail.com
         port: 587
         username: "equipmentold@gmail.com"
-        password: "odng upwk lixm scqh"  # Replace with App Password
+        password: "{{ lookup('env', 'APP_PASSWORD') }}"  # Replace with App Password
         to: "gjb1088@gmail.com"
         subject: "Daily Network Analytics Report"
         body: |
