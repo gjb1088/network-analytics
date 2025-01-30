@@ -55,9 +55,9 @@
       community.general.mail:
         host: smtp.gmail.com
         port: 587
-        username: "equipmentold@gmail.com"
+        username: "{{ lookup('env', 'EMAIL_USERNAME') }}"
         password: "{{ lookup('env', 'APP_PASSWORD') }}"  # Replace with App Password
-        to: "gjb1088@gmail.com"
+        to: "{{ lookup('env', 'EMAIL_TO') }}"
         subject: "Daily Network Analytics Report"
         body: |
           Attached is the latest network performance report.
