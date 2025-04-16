@@ -35,8 +35,8 @@ This project is a network performance analytics and reporting system built using
 
 ### 1. Clone the Repository
 ```bash
-git clone <your-repo-url>
-cd <your-repo-directory>
+git clone https://github.com/gjb1088/network-analytics.git
+cd network-analytics
 ```
 
 ### 2. Build the Docker Image
